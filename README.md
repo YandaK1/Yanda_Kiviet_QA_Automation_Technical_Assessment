@@ -208,7 +208,7 @@ Git is needed to clone the repository but is optional if the project is download
 Copy the repository's HTTPS URL from GitHub and run:
 
 ```powershell
-git clone REPOSITORY_URL
+git clone https://github.com/YandaK1/saucedemo-playwright-bdd.git
 ```
 
 
