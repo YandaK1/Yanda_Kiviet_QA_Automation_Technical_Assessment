@@ -3,7 +3,7 @@
 **Author:** Yanda Kiviet  
 **Role:** Quality Engineer | QA Automation  
 **Application Under Test:** [SauceDemo (Swag Labs)](https://www.saucedemo.com/)  
-**Project Type:** Automated Web UI Testing
+**Project Type:** Automated Web UI and API Testing
 
 ## Overview
 
@@ -12,6 +12,8 @@ This repository contains an independent end-to-end test automation suite for **S
 The project uses **Playwright, TypeScript, Playwright BDD and the Page Object Model (POM)** to validate authentication, product sorting, shopping cart functionality and checkout.
 
 It demonstrates practical Quality Engineering principles, including positive and negative testing, reusable components, meaningful assertions, scenario independence and cross-browser validation.
+
+The repository also includes the [Catfact Ninja Postman collection](#catfact-ninja-api-tests-task-3b) for Task 3b of the technical assessment.
 
 ## Table of Contents
 
@@ -22,15 +24,16 @@ It demonstrates practical Quality Engineering principles, including positive and
 5. [Installation and Setup](#installation-and-setup)
 6. [Running the Tests](#running-the-tests)
 7. [Test Reports and Results](#test-reports-and-results)
-8. [Test Design and Maintainability](#test-design-and-maintainability)
-9. [Troubleshooting](#troubleshooting)
-10. [Author and Attribution](#author-and-attribution)
+8. [Catfact Ninja API Tests (Task 3b)](#catfact-ninja-api-tests-task-3b)
+9. [Test Design and Maintainability](#test-design-and-maintainability)
+10. [Troubleshooting](#troubleshooting)
+11. [Author and Attribution](#author-and-attribution)
 
 ---
 
 ## Quick Start
 
-For developers already familiar with Node.js and Playwright, the following commands are sufficient to set up and execute the project.
+For developers already familiar with Node.js and Playwright, the following commands set up and run the SauceDemo web UI tests.
 
 **Prerequisites:** Node.js, npm and an internet connection.
 
@@ -61,7 +64,8 @@ For first-time setup, installation requirements and explanations, refer to [Inst
 | Playwright BDD | Integrates Gherkin scenarios with Playwright |
 | Gherkin | Defines readable Given/When/Then scenarios |
 | Page Object Model (POM) | Encapsulates page locators and reusable interactions |
-| Node.js and npm | Runtime and dependency management |
+| Node.js and npm | Runtime and dependency management for the Playwright suite |
+| Postman | Catfact Ninja API requests and automated response checks |
 
 ### Cross-Browser Testing
 
@@ -75,7 +79,7 @@ Running the same scenarios across different browser engines helps identify poten
 
 ## Test Coverage
 
-The automation suite covers four functional areas:
+The SauceDemo suite covers four functional areas:
 
 ### 1. Login
 
@@ -150,6 +154,8 @@ saucedemo-playwright-bdd/
 ├── package.json
 ├── package-lock.json
 ├── playwright.config.ts
+├── Task 3b Catfact Ninja Postman Collection/
+│   └── Task3b_Catfact_Ninja_API_Automated_Tests.postman_collection.json
 └── README.md
 ```
 
@@ -163,8 +169,9 @@ saucedemo-playwright-bdd/
 | `tests/*.steps.ts` | Step definitions connecting scenarios to Playwright |
 | `playwright.config.ts` | BDD integration, browser configuration and execution settings |
 | `package.json` | Project dependencies and npm scripts |
+| `Task 3b Catfact Ninja Postman Collection/` | Catfact Ninja Postman collection for Task 3b |
 
-Generated BDD files, browser reports, test results and installed dependencies are excluded from version control through `.gitignore`.
+Setup and test runs generate `.features-gen/`, `node_modules/`, `playwright-report/` and `test-results/`. These local folders are excluded from version control through `.gitignore`.
 
 ## Installation and Setup
 
@@ -324,6 +331,24 @@ Additional debugging attachments, such as screenshots and traces, are available 
 All 51 test executions passed across Chromium, Firefox and WebKit in the latest reported local run.
 
 Results may vary if the application, environment or test implementation changes.
+
+## Catfact Ninja API Tests (Task 3b)
+
+The [Postman collection JSON](Task%203b%20Catfact%20Ninja%20Postman%20Collection/Task3b_Catfact_Ninja_API_Automated_Tests.postman_collection.json) contains three GET requests for the Catfact Ninja API. Each request checks for HTTP 200 and a valid JSON response.
+
+| Request | Additional checks |
+|---|---|
+| `GET /fact?max_length=150` | Fact text, reported length and the requested maximum length |
+| `GET /facts?limit=5` | Page size, fact records and the first-page record range |
+| `GET /breeds?limit=5` | Page size, breed names and the types of the descriptive fields |
+
+### Run the Postman Collection
+
+1. In Postman, select **Import** and choose the collection JSON in `Task 3b Catfact Ninja Postman Collection/`.
+2. Open **Catfact Ninja API - Automated Tests** and confirm that the collection variable `baseUrl` is set to `https://catfact.ninja`.
+3. Select **Run**, leave **No Environment** selected, and run all three requests for one iteration.
+
+The latest recorded Postman run passed **15 of 15 checks** across the three requests.
 
 ## Test Design and Maintainability
 
