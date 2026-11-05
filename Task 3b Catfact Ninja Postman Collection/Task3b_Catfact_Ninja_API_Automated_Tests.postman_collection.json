@@ -1,0 +1,440 @@
+{
+  "info": {
+    "_postman_id": "b7403fd4-c71e-4f6a-95a8-19ba9974a790",
+    "name": "Catfact Ninja API - Automated Tests",
+    "description": "Catfact Ninja API — Automated Tests\n\nAuthor: Yanda Kiviet\n\nThis collection contains three automated API tests developed using Postman to validate the Catfact Ninja API.\n\nTest Coverage:\n\n- TC-01: Retrieve a random cat fact and validate its response and maximum length.\n    \n- TC-02: Retrieve a limited list of cat facts and validate the returned records.\n    \n- TC-03: Retrieve a limited list of cat breeds and validate the response data.\n    \n\nSetup and Execution:\n\n1. Import the collection into Postman Desktop.\n    \n2. Confirm that the collection variable baseUrl is set to [https://catfact.ninja](https://catfact.ninja/).\n    \n3. No authentication or API key is required.\n    \n4. Open the Collection Runner.\n    \n5. Select Functional, Local, and 1 iteration.\n    \n6. Select all three requests and click Start run.\n    \n7. Review the automated test results.\n    \n\nExpected Result: All three tests pass when the API returns responses that meet the defined assertions.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56334890"
+  },
+  "item": [
+    {
+      "name": "TC-01 - Retrieve a random cat fact",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Fact text is present', () => {\r\n    const { fact } = pm.response.json();\r\n    pm.expect(fact).to.be.a('string').and.match(/\\S/);\r\n});\r\n\r\npm.test('Reported length matches the text', () => {\r\n    const { fact, length } = pm.response.json();\r\n    pm.expect(length).to.be.above(0).and.equal(fact.length);\r\n});\r\n\r\npm.test('Fact respects max_length', () => {\r\n    const maxLength = Number(pm.request.url.query.get('max_length'));\r\n    pm.expect(pm.response.json().fact.length).to.be.at.most(maxLength);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/fact?max_length=150",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "fact"
+          ],
+          "query": [
+            {
+              "key": "max_length",
+              "value": "150"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "TC-01 - Retrieve a random cat fact",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/fact?max_length=150",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fact"
+              ],
+              "query": [
+                {
+                  "key": "max_length",
+                  "value": "150"
+                }
+              ]
+            }
+          },
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": ":status",
+              "value": "200"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Nov 2026 14:19:58 GMT"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "cache-control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "x-ratelimit-limit",
+              "value": "100"
+            },
+            {
+              "key": "x-ratelimit-remaining",
+              "value": "97"
+            },
+            {
+              "key": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "key": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "x-xss-protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "nel",
+              "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "report-to",
+              "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=p7y7QGiGhFsbNk9f3uKg%2Fiy4khheGj4FQ85uZPLxlJaqwMMcqzmOHAqNi%2FlMbOLA1ZQp7Rp%2FD5LNnDQ84UZCyeKMaIxIIaOhULEcVur5kHUX8pZQMN6uH%2BTOUjbFjUyA\"}]}"
+            },
+            {
+              "key": "cf-ray",
+              "value": "a55c7f17cbf3fbb0-JNB"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"fact\": \"A group of cats is called a “clowder.”\",\n  \"length\": 38\n}"
+        }
+      ]
+    },
+    {
+      "name": "TC-02 - Retrieve a limited list of cat facts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Page respects the requested limit', () => {\r\n    const limit = Number(pm.request.url.query.get('limit'));\r\n    const { data } = pm.response.json();\r\n\r\n    pm.expect(data).to.be.an('array');\r\n    pm.expect(data.length).to.be.within(1, limit);\r\n});\r\n\r\npm.test('Each fact has text and the correct length', () => {\r\n    for (const { fact, length } of pm.response.json().data) {\r\n        pm.expect(fact).to.be.a('string').and.match(/\\S/);\r\n        pm.expect(length).to.equal(fact.length);\r\n    }\r\n});\r\n\r\npm.test('First-page range matches the returned records', () => {\r\n    const { current_page, from, to, data } = pm.response.json();\r\n\r\n    pm.expect(current_page).to.equal(1);\r\n    pm.expect(from).to.equal(1);\r\n    pm.expect(to).to.equal(data.length);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/facts?limit=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "facts"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "TC-02 - Retrieve a limited list of cat facts",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/facts?limit=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "facts"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": ":status",
+              "value": "200"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Nov 2026 14:19:28 GMT"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "cache-control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "x-ratelimit-limit",
+              "value": "100"
+            },
+            {
+              "key": "x-ratelimit-remaining",
+              "value": "98"
+            },
+            {
+              "key": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "key": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "x-xss-protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "nel",
+              "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "report-to",
+              "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=MZFgKAhO539dgd67ZWKNiNQa10wxHK1npYUwvRqAwpnrdsfWUevwM4vS3zoCWgTPHwgnX8tnwar5v7KNICTJwRSTBOr9IxMUvaHemnpKUHXZ%2FaeuQYWZ1yaNY%2FdUP1Kg\"}]}"
+            },
+            {
+              "key": "cf-ray",
+              "value": "a55c7e5b3c7cfbb0-JNB"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"current_page\": 1,\n  \"data\": [\n    {\n      \"fact\": \"Unlike dogs, cats do not have a sweet tooth. Scientists believe this is due to a mutation in a key taste receptor.\",\n      \"length\": 114\n    },\n    {\n      \"fact\": \"When a cat chases its prey, it keeps its head level. Dogs and humans bob their heads up and down.\",\n      \"length\": 97\n    },\n    {\n      \"fact\": \"The technical term for a cat’s hairball is a “bezoar.”\",\n      \"length\": 54\n    },\n    {\n      \"fact\": \"A group of cats is called a “clowder.”\",\n      \"length\": 38\n    },\n    {\n      \"fact\": \"A cat can’t climb head first down a tree because every claw on a cat’s paw points the same way. To get down from a tree, a cat must back down.\",\n      \"length\": 142\n    }\n  ],\n  \"first_page_url\": \"https://catfact.ninja/facts?page=1\",\n  \"from\": 1,\n  \"last_page\": 67,\n  \"last_page_url\": \"https://catfact.ninja/facts?page=67\",\n  \"links\": [\n    {\n      \"url\": null,\n      \"label\": \"Previous\",\n      \"page\": null,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=1\",\n      \"label\": \"1\",\n      \"page\": 1,\n      \"active\": true\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=2\",\n      \"label\": \"2\",\n      \"page\": 2,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=3\",\n      \"label\": \"3\",\n      \"page\": 3,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=4\",\n      \"label\": \"4\",\n      \"page\": 4,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=5\",\n      \"label\": \"5\",\n      \"page\": 5,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=6\",\n      \"label\": \"6\",\n      \"page\": 6,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=7\",\n      \"label\": \"7\",\n      \"page\": 7,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=8\",\n      \"label\": \"8\",\n      \"page\": 8,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=9\",\n      \"label\": \"9\",\n      \"page\": 9,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=10\",\n      \"label\": \"10\",\n      \"page\": 10,\n      \"active\": false\n    },\n    {\n      \"url\": null,\n      \"label\": \"...\",\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=66\",\n      \"label\": \"66\",\n      \"page\": 66,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=67\",\n      \"label\": \"67\",\n      \"page\": 67,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/facts?page=2\",\n      \"label\": \"Next\",\n      \"page\": 2,\n      \"active\": false\n    }\n  ],\n  \"next_page_url\": \"https://catfact.ninja/facts?page=2\",\n  \"path\": \"https://catfact.ninja/facts\",\n  \"per_page\": 5,\n  \"prev_page_url\": null,\n  \"to\": 5,\n  \"total\": 332\n}"
+        }
+      ]
+    },
+    {
+      "name": "TC-03 - Retrieve a limited list of cat breeds",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Page respects the requested limit', () => {\r\n    const limit = Number(pm.request.url.query.get('limit'));\r\n    const { data } = pm.response.json();\r\n\r\n    pm.expect(data).to.be.an('array');\r\n    pm.expect(data.length).to.be.within(1, limit);\r\n});\r\n\r\npm.test('Each breed has a name', () => {\r\n    for (const { breed } of pm.response.json().data) {\r\n        pm.expect(breed).to.be.a('string').and.match(/\\S/);\r\n    }\r\n});\r\n\r\npm.test('Breed details are strings', () => {\r\n    const fields = ['country', 'origin', 'coat', 'pattern'];\r\n\r\n    for (const breed of pm.response.json().data) {\r\n        for (const field of fields) {\r\n            pm.expect(breed[field], field).to.be.a('string');\r\n        }\r\n    }\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/breeds?limit=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "breeds"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "TC-03 - Retrieve a limited list of cat breeds",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/breeds?limit=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "breeds"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": ":status",
+              "value": "200"
+            },
+            {
+              "key": "date",
+              "value": "Thu, 05 Nov 2026 14:19:19 GMT"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "server",
+              "value": "cloudflare"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "cache-control",
+              "value": "no-cache, private"
+            },
+            {
+              "key": "x-ratelimit-limit",
+              "value": "100"
+            },
+            {
+              "key": "x-ratelimit-remaining",
+              "value": "99"
+            },
+            {
+              "key": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "key": "x-frame-options",
+              "value": "SAMEORIGIN"
+            },
+            {
+              "key": "x-xss-protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "nel",
+              "value": "{\"report_to\":\"cf-nel\",\"success_fraction\":0.0,\"max_age\":604800}"
+            },
+            {
+              "key": "cf-cache-status",
+              "value": "DYNAMIC"
+            },
+            {
+              "key": "report-to",
+              "value": "{\"group\":\"cf-nel\",\"max_age\":604800,\"endpoints\":[{\"url\":\"https://a.nel.cloudflare.com/report/v4?s=ZKgmtzjTHcV0eLjErdQagzBRfRtPqCWa%2FVZkGCmZW1hLUHlogy2rp1cPfiL%2FcNNGSSfjhOBMH7OVIWP8oZj0z3TViqW%2FH30xM7sWsyvadTThs%2Feeg8qi2sT01UR9X8vn\"}]}"
+            },
+            {
+              "key": "cf-ray",
+              "value": "a55c7e25fb1bfbb0-JNB"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=86400"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"current_page\": 1,\n  \"data\": [\n    {\n      \"breed\": \"Abyssinian\",\n      \"country\": \"Ethiopia\",\n      \"origin\": \"Natural/Standard\",\n      \"coat\": \"Short\",\n      \"pattern\": \"Ticked\"\n    },\n    {\n      \"breed\": \"Aegean\",\n      \"country\": \"Greece\",\n      \"origin\": \"Natural/Standard\",\n      \"coat\": \"Semi-long\",\n      \"pattern\": \"Bi- or tri-colored\"\n    },\n    {\n      \"breed\": \"American Curl\",\n      \"country\": \"United States\",\n      \"origin\": \"Mutation\",\n      \"coat\": \"Short/Long\",\n      \"pattern\": \"All\"\n    },\n    {\n      \"breed\": \"American Bobtail\",\n      \"country\": \"United States\",\n      \"origin\": \"Mutation\",\n      \"coat\": \"Short/Long\",\n      \"pattern\": \"All\"\n    },\n    {\n      \"breed\": \"American Shorthair\",\n      \"country\": \"United States\",\n      \"origin\": \"Natural\",\n      \"coat\": \"Short\",\n      \"pattern\": \"All but colorpoint\"\n    }\n  ],\n  \"first_page_url\": \"https://catfact.ninja/breeds?page=1\",\n  \"from\": 1,\n  \"last_page\": 20,\n  \"last_page_url\": \"https://catfact.ninja/breeds?page=20\",\n  \"links\": [\n    {\n      \"url\": null,\n      \"label\": \"Previous\",\n      \"page\": null,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=1\",\n      \"label\": \"1\",\n      \"page\": 1,\n      \"active\": true\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=2\",\n      \"label\": \"2\",\n      \"page\": 2,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=3\",\n      \"label\": \"3\",\n      \"page\": 3,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=4\",\n      \"label\": \"4\",\n      \"page\": 4,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=5\",\n      \"label\": \"5\",\n      \"page\": 5,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=6\",\n      \"label\": \"6\",\n      \"page\": 6,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=7\",\n      \"label\": \"7\",\n      \"page\": 7,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=8\",\n      \"label\": \"8\",\n      \"page\": 8,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=9\",\n      \"label\": \"9\",\n      \"page\": 9,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=10\",\n      \"label\": \"10\",\n      \"page\": 10,\n      \"active\": false\n    },\n    {\n      \"url\": null,\n      \"label\": \"...\",\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=19\",\n      \"label\": \"19\",\n      \"page\": 19,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=20\",\n      \"label\": \"20\",\n      \"page\": 20,\n      \"active\": false\n    },\n    {\n      \"url\": \"https://catfact.ninja/breeds?page=2\",\n      \"label\": \"Next\",\n      \"page\": 2,\n      \"active\": false\n    }\n  ],\n  \"next_page_url\": \"https://catfact.ninja/breeds?page=2\",\n  \"path\": \"https://catfact.ninja/breeds\",\n  \"per_page\": 5,\n  \"prev_page_url\": null,\n  \"to\": 5,\n  \"total\": 98\n}"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "pm.test('Returns 200 OK', () => {\r",
+          "    pm.response.to.have.status(200);\r",
+          "});\r",
+          "\r",
+          "pm.test('Returns valid JSON', () => {\r",
+          "    const contentType = pm.response.headers.get('Content-Type') || '';\r",
+          "    const mediaType = contentType.split(';')[0].trim().toLowerCase();\r",
+          "\r",
+          "    pm.expect(mediaType).to.equal('application/json');\r",
+          "    pm.expect(() => pm.response.json()).not.to.throw();\r",
+          "});"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://catfact.ninja"
+    }
+  ]
+}
