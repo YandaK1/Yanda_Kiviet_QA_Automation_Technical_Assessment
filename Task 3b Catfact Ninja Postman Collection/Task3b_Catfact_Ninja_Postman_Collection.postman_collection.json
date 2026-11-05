@@ -1,0 +1,119 @@
+{
+  "info": {
+    "_postman_id": "b7403fd4-c71e-4f6a-95a8-19ba9974a790",
+    "name": "Catfact Ninja API - Automated Tests",
+    "description": "Catfact Ninja API — Automated Tests\n\nAuthor: Yanda Kiviet\n\nThis collection contains three automated API tests developed using Postman to validate the Catfact Ninja API.\n\nTest Coverage:\n\n- TC-01: Retrieve a random cat fact and validate its response and maximum length.\n    \n- TC-02: Retrieve a limited list of cat facts and validate the returned records.\n    \n- TC-03: Retrieve a limited list of cat breeds and validate the response data.\n    \n\nSetup and Execution:\n\n1. Import the collection into Postman Desktop.\n    \n2. Confirm that the collection variable baseUrl is set to [https://catfact.ninja](https://catfact.ninja/).\n    \n3. No authentication or API key is required.\n    \n4. Open the Collection Runner.\n    \n5. Select Functional, Local, and 1 iteration.\n    \n6. Select all three requests and click Start run.\n    \n7. Review the automated test results.\n    \n\nExpected Result: All three tests pass when the API returns responses that meet the defined assertions.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56334890"
+  },
+  "item": [
+    {
+      "name": "TC-01 - Retrieve a random cat fact",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"TC-01: Retrieve a valid cat fact\", function () {\r\n    pm.response.to.have.status(200);\r\n    pm.response.to.be.json;\r\n\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.fact).to.be.a(\"string\").and.not.empty;\r\n    pm.expect(response.length).to.be.a(\"number\");\r\n    pm.expect(Number.isInteger(response.length)).to.be.true;\r\n    pm.expect(response.length).to.equal(response.fact.length);\r\n    pm.expect(response.length).to.be.at.most(150);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/fact?max_length=150",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "fact"
+          ],
+          "query": [
+            {
+              "key": "max_length",
+              "value": "150"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TC-02 - Retrieve a limited list of cat facts",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"TC-02: Retrieve a limited list of cat facts\", function () {\r\n    pm.response.to.have.status(200);\r\n    pm.response.to.be.json;\r\n\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.data).to.be.an(\"array\");\r\n    pm.expect(response.data.length).to.be.greaterThan(0);\r\n    pm.expect(response.data.length).to.be.at.most(5);\r\n\r\n    response.data.forEach(fact => {\r\n        pm.expect(fact.fact).to.be.a(\"string\").and.not.empty;\r\n        pm.expect(fact.length).to.be.a(\"number\");\r\n        pm.expect(Number.isInteger(fact.length)).to.be.true;\r\n        pm.expect(fact.length).to.equal(fact.fact.length);\r\n    });\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/facts?limit=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "facts"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "TC-03 - Retrieve a limited list of cat breeds",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"TC-03: Retrieve a limited list of cat breeds\", function () {\r\n    pm.response.to.have.status(200);\r\n    pm.response.to.be.json;\r\n\r\n    const response = pm.response.json();\r\n\r\n    pm.expect(response.data).to.be.an(\"array\");\r\n    pm.expect(response.data.length).to.be.greaterThan(0);\r\n    pm.expect(response.data.length).to.be.at.most(5);\r\n\r\n    response.data.forEach(breed => {\r\n        pm.expect(breed.breed).to.be.a(\"string\").and.not.empty;\r\n        pm.expect(breed.country).to.be.a(\"string\");\r\n        pm.expect(breed.origin).to.be.a(\"string\");\r\n        pm.expect(breed.coat).to.be.a(\"string\");\r\n        pm.expect(breed.pattern).to.be.a(\"string\");\r\n    });\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/breeds?limit=5",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "breeds"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    }
+  ]
+}
