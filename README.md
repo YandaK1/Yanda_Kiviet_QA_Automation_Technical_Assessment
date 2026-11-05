@@ -1,4 +1,4 @@
-# SauceDemo | Playwright BDD Test Automation
+# QA Automation Technical Assessment
 
 **Author:** Yanda Kiviet  
 **Role:** Quality Engineer | QA Automation  
@@ -7,9 +7,9 @@
 
 ## Overview
 
-This repository contains an independent end-to-end test automation suite for **SauceDemo (Swag Labs)**, an existing demonstration e-commerce application provided by Sauce Labs.
+This repository contains the automated web UI and API tests for the QA Automation Technical Assessment.
 
-The project uses **Playwright, TypeScript, Playwright BDD and the Page Object Model (POM)** to validate authentication, product sorting, shopping cart functionality and checkout.
+The **SauceDemo (Swag Labs)** suite uses **Playwright, TypeScript, Playwright BDD and the Page Object Model (POM)** to validate authentication, product sorting, shopping cart functionality and checkout.
 
 It demonstrates practical Quality Engineering principles, including positive and negative testing, reusable components, meaningful assertions, scenario independence and cross-browser validation.
 
@@ -132,7 +132,7 @@ The automation retrieves the displayed product names or prices, independently ca
 ## Project Structure
 
 ```text
-saucedemo-playwright-bdd/
+Yanda_Kiviet_QA_Automation_Technical_Assessment/
 ├── src/
 │   ├── fixtures/
 │   │   └── pages-fixture.ts
@@ -215,7 +215,7 @@ Git is needed to clone the repository but is optional if the project is download
 Copy the repository's HTTPS URL from GitHub and run:
 
 ```powershell
-git clone https://github.com/YandaK1/saucedemo-playwright-bdd.git
+git clone https://github.com/YandaK1/Yanda_Kiviet_QA_Automation_Technical_Assessment.git
 ```
 
 
@@ -232,7 +232,7 @@ Open a terminal in the extracted or cloned project directory.
 For a standard cloned repository, run:
 
 ```powershell
-cd saucedemo-playwright-bdd
+cd Yanda_Kiviet_QA_Automation_Technical_Assessment
 ```
 
 Alternatively, open the project in Visual Studio Code and select **Terminal > New Terminal**.
@@ -443,3 +443,4 @@ This independently developed test automation project demonstrates practical skil
 **Application Under Test:** [SauceDemo — Swag Labs](https://www.saucedemo.com/)
 
 SauceDemo is an existing demonstration application provided by Sauce Labs. This repository contains automated tests for that application and does not claim ownership of the application itself.
+
